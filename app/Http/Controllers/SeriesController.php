@@ -10,7 +10,7 @@ class SeriesController extends Controller
 {
     public function index(Request $request)
     {
-        $lista = Serie::all();
+        $lista = Serie::query()->orderBy('nome')->get();
         //dd($lista);
 
         return view('series.index')->with('series', $lista);
@@ -23,7 +23,10 @@ class SeriesController extends Controller
 
     public function store(Request $request)
     {
-        if(Serie::insert('insert into serie (nome) values (?)', [ $request->input("nome")])){
+        $serie = new Serie();
+        $serie->nome = $request->input("nome");
+        
+        if($serie->save()){
             return redirect('/series');
         }else{
             return "Erro ao inserir";
